@@ -1,0 +1,16 @@
+//root should not be NULL
+Node* getMin(Node* root,int n){
+	if(root==NULL)
+		return NULL;
+	
+if(root->val>n){
+	Node* tmp=getMin(root->left,n);
+	if(tmp!=NULL && abs(tmp->val-n)<(root->val-n) )
+		return tmp;
+}else if(root->val<n){
+	Node* tmp=getMin(root->right,n);
+	if(tmp!=NULL && abs(tmp->val-n)<(n-root->val) )
+		return tmp;
+}
+return root;
+}
