@@ -1,0 +1,49 @@
+#include <vector>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+#define NO_OF_CHAR 26
+
+string minSubstring(string s,int n){
+	int count[NO_OF_CHAR];
+    for(int i=0;i<NO_OF_CHAR;i++)
+        count[i]=0;
+	int matched=0;
+	int start=0;
+	int len=INT_MAX;
+	int front=0;
+	for(int j=0;j<s.size();j++){
+		count[s[j]-'a']++;
+		if(count[s[j]-'a']==1)
+			matched++;
+		if(matched==n){
+            cout<<"here"<<endl;
+			//narrow down the start
+			while(count[s[start]-'a']>1)
+                start++;
+			if(len>j-start+1){
+				len=j-start+1;
+				front=start;
+			}
+            cout<<len<<endl;
+			if(len==n)
+				return s.substr(front,n);
+			//move the start forward
+			count[s[start++]-'a']--;
+			matched--;
+		}
+	}
+    if(len==INT_MAX)
+        return s.substr(front);
+    else
+        return s.substr(front,len);
+}
+int main(){
+    string s="anasdfasdfade";
+    int n=6;
+    cout<<minSubstring(s, n)<<endl;
+
+}
+
