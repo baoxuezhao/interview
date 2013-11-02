@@ -1,0 +1,58 @@
+#include <iostream>
+#include <stdlib.h>
+#include <string>
+#include <sstream>
+#include <unordered_map>
+
+using namespace std;
+
+string itoa(int n){
+	std::stringstream ss;
+	ss<<n;
+	return ss.str();
+}
+string divide(int a,int b){
+
+    string result=itoa(a/b);
+	a=a%b;
+	unordered_map<int,int> remain;
+	int size=result.size();
+	if(a==0)
+		return result;
+	result+='.';
+	a=a*10;
+	int loop_s=-1;
+	while(a!=0){
+		if(remain.find(a)!=remain.end()){
+			loop_s=remain.find(a)->second;
+			break;
+		}
+		remain.insert(pair<int,int>(a,result.size()));
+		if(a<b){
+			a=a*10;
+			result+='0';
+		}else{
+			result+=(a/b+'0');
+			a=a%b*10;
+		}
+	}
+	if(a!=0){
+		result.insert(loop_s,"(");
+		result+=")";
+	}
+	return result;
+}
+
+
+int main()
+{
+    int n=100;
+    while(n){
+        int a=rand()%1000;
+        int b=rand()%300+1;
+        cout<<"a: "<<a<<" b: "<<b<<" "<<divide(a,b)<<endl;
+        n--;
+    }
+  
+    return 0;
+}
