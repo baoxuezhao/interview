@@ -29,6 +29,27 @@ void unique(int A[],int m,int B[],int n){
 	}
 }
 
+vector<int> uniqueElement(vector<int> A,vector<int> B){
+	unordered_map<int,int> map;
+	vector<int> ret;
+    cout<<"test: "<<map[12]<<endl;
+	for(int i=0;i<A.size();i++)
+		map[A[i]] |= 1;
+	for(int i=0;i<B.size();i++)
+//		if(map.find(B[i])!=map.end())
+			map[B[i]] |= 2;
+//		else
+//			map[B[i]]=2;
+	unordered_map<int,int>::iterator iter;
+	for(iter=map.begin();iter!=map.end();iter++)
+		if(iter->second!=3){
+			ret.push_back(iter->first);
+            cout<<iter->first<<endl;
+        }
+	return ret;
+}
+
+
 
 int main(){
     int a[]={1,2,3,4,1,1,1,6};
