@@ -1,0 +1,38 @@
+#include <vector>
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+
+void unique(int A[],int m,int B[],int n){
+	sort(A,A+m);
+	sort(B,B+n);
+	int pa=0;
+	int pb=0;
+	while(pa<m || pb<n){
+		if(pa==m || A[pa]>B[pb]){
+			cout<<B[pb++]<<endl;
+            
+		}
+		else if(pb==n || A[pa]<B[pb]){
+			cout<<A[pa++]<<endl;
+            
+		}else{
+			pa++;
+			pb++;
+		}
+		while(pb> 0&& pb<n && B[pb]==B[pb-1])
+			pb++;
+		while(pa>0 && pa<m && A[pa]==A[pa-1])
+			pa++;
+	}
+}
+
+
+int main(){
+    int a[]={1,2,3,4,1,1,1,6};
+    int b[]={2,2,24,7,8,0,1};
+    unique(a,8,b,7);
+    
+}
