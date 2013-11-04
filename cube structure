@@ -1,0 +1,22 @@
+//six colors, each face have 9 cellls
+class cube{
+private:
+//cube has six faces
+int surface[6][9]; 
+int linkface[6][4];
+int linkcell[6][4][3];
+
+public:
+//initialize the cube
+cube();
+
+void rotate(int sufaceNum, int deg);
+
+bool isFinished();
+
+//rotate the cube so that it’s now 
+void restore();
+
+//rotate the cube randomly
+void shuff();
+};
