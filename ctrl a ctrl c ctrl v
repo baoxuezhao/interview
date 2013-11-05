@@ -1,0 +1,36 @@
+#include <vector>
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <stdlib.h>
+#include <queue>
+#include <limits.h>
+using namespace std;
+
+void max_count(int n){
+    
+    long long  *M = new long long[n];
+    
+    M[0] = 1;
+    for( int i = 1; i < n; i += 1)
+    {
+        long long maxi = 0;
+        maxi = maxi > (1+M[i-1])? maxi:(1 + M[i-1]);
+        for(int k = 0; k <= i-4; k++)
+        {
+            long long temp = M[k] + (i-k-3) * M[k];
+            maxi = maxi > temp? maxi: temp;
+        }
+        M[i] = maxi;
+    }
+    cout << n<<" :" << M[n-1] << endl;
+    
+    delete[] M;
+    
+}
+int main (int argc, char const* argv[])
+{
+    for(int i=0;i<100;i++)
+        max_count(i);
+    return 0;
+}
