@@ -1,0 +1,71 @@
+
+
+#include <vector>
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <stdlib.h>
+#include <queue>
+#include <limits.h>
+using namespace std;
+
+struct node{
+    node* left;
+    node* right;
+    int data;
+    node(int v){
+        data=v;
+        left=right=NULL;
+    }
+    
+};
+
+node *buildBST(int pre[],int &idx,int size,int minVal,int maxVal){
+    if(idx==size)
+		return NULL;
+	node *root=NULL;
+	if(minVal<pre[idx] && pre[idx]<maxVal){
+		root=new node(pre[idx++]); // incrementing idx
+		root->left=buildBST(pre,idx,size,minVal,root->data);
+		root->right=buildBST(pre,idx,size,root->data-1,maxVal);
+	}
+	return root;
+}
+
+node* construct(vector<int> num,int s,int e){
+    if(s>e)
+		return NULL;
+	node* root=new node(num[s]);
+	int i=s+1;
+	for(;i<=e;i++){
+		if(num[i]>num[s])
+			break;
+	}
+	root->left=construct(num,s+1,i-1);
+	root->right=construct(num,i,e);
+	return root;
+}
+
+void preorder(node* root){
+    if(root==NULL){
+        return;
+    }
+    cout<<root->data<<" ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+int main(){
+    int a[]={4,2,1,3,6,5,4,4,7};
+    
+    int n=sizeof(a)/sizeof(int);
+    int idx=0;
+    vector<int> b(a,a+n);
+    node * root1=construct(b,0,n-1);
+    if(root1==NULL)
+        cout<<"empty tree"<<endl;
+   node * root=buildBST(a, idx,n,INT_MIN, INT_MAX);
+    preorder(root1);
+    preorder(root);
+    return 0;
+}
