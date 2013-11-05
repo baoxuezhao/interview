@@ -1,0 +1,51 @@
+Class readWriteLocker{
+private:
+	int max_readers; //the maximum readers allowed
+	int cur_readers; //
+	mutex my_mutex;
+	mutex delay;
+public:
+	//the concurrent readers
+	readWriteLocker(int r){
+		max_readers=r;
+	}
+	read_lock(){
+		my_mutex.lock();
+		cur_readers++;
+		if(cur_readers>max_readers){
+			my_mutex.unlock();
+			delay.lock();
+			read();
+}else{
+	read();
+			my_mutex.unlock();
+		}
+	}
+	read_unlock(){
+		my_mutex.lock();
+		cur_readers--;
+		//because there might be multiple readers who are waiting
+		if(cur_readers>=max_readers)
+			delay.unlock();
+		my_mutex.unlock();
+	}
+	write_lock(){
+		my_mutex.lock();
+		cur_readers+=max_readers;
+		while(cur_readers>max_readers){
+			my_mutex.unlock();
+			delay.lock();
+			my_mutex.lock();
+		}
+		write();
+		my_mutex.unlock();
+	}
+	}
+	write_unlock(){
+		my_mutex.lock();
+		cur_readers-=max_readers;
+		if(cur_readers>=max_readers)
+			delay.unlock();
+		my_mutex.unlock();
+	}
+};
