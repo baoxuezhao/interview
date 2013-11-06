@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct Interval{
+    int start;
+	int end;
+	int val;
+    Interval(int s,int e,int v){
+        start=s;
+        end=e;
+        val=v;
+    }
+};
+struct Point{
+	int pos;
+	bool start;
+	int weight;
+	Point(int p,bool s,int w){
+		pos=p;
+		start=s;
+		weight=w;
+	}
+};
+
+bool cmp(Point p1,Point p2){
+	return p1.pos<p2.pos;
+}
+void discrete(vector<Interval> intervals,vector<int> & ranges,vector<int> &weights){
+	vector<Point> vec;
+	for(int i=0;i<intervals.size();i++){
+		Point p1(intervals[i].start,true,intervals[i].val);
+		Point p2(intervals[i].end,false,intervals[i].val);
+		vec.push_back(p1);
+		vec.push_back(p2);
+	}
+	sort(vec.begin(),vec.end());
+	Point prev;
+	prev=vec[0];
+	ranges.push_back(prev.pos);
+	for(int i=1;i<vec.size();i++){
+		Point cur=vec[i];
+		if(cur.pos==prev.pos){
+			prev.weight=max(prev.weight,cur.weight);
+			continue;
+		}
+		ranges.push_back(cur.pos);
+		if(prev.start&&cur.start){
+			weights.push_back(prev.weight);
+			prev=cur;
+			prev.weight=max(prev.weight,cur.weight);
+		}
+		else if(prev.start&&!cur.start){
+			weights.push_back(max(prev.weight,cur.weight));
+			cur.weight=prev.weight;
+			prev=cur;		
+		}else if(!prev.start&&cur.start){
+			weights.push_back(0);
+			prev=cur;
+		}else{
+			weights.push_back(cur.weight);
+			prev=cur;
+		}
+	}
+}
+void print(vector<int> v){
+    for(int i=0;i<v.size();i++)
+        cout<<v[i]<<" ";
+    cout<<endl;
+}
+int main(){
+    Interval i1(1,2,1);
+    Interval i2(1,4,2);
+    Interval i3(2,5,3);
+    Interval i4(3,6,4);
+    vector<int> ranges;
+    vector<int> weights;
+    Interval intervals;
+    intervals.push_back(i1);
+    intervals.push_back(i2);
+    intervals.push_back(i3);
+    discrete(intervals,ranges,weights);
+    print(ranges);
+    print(weights); 
+}
