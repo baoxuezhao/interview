@@ -1,0 +1,45 @@
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+unordered_map<int,int> blist;
+ 
+void count_dup(int* arr, int start, int end)
+{
+    if(start>end)
+        return;
+    if(start==end){
+        blist[arr[start]]+=1;
+        return;   
+    }
+ 
+    if(arr[start] == arr[end]) {
+        blist[arr[end]] += end - start + 1;
+        return;
+    }
+
+    int mid = start+(end-start)/2;
+    if(arr[start]==arr[mid]){
+        blist[arr[start]]+=mid-start+1;
+        count_dup(arr,mid+1,end);
+    }else if(arr[mid]==arr[end]){
+        blist[arr[mid]]+=end-start+1;
+        count_dup(arr,start,mid-1);
+    }else{
+        blist[arr[mid]]+=1;
+        count_dup(arr,start,mid-1);
+        count_dup(arr,mid+1,end);
+    }
+    return;
+}
+ 
+int main()
+{
+    int A[] = {1,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,6,7,7,8,9};
+    count_dup(A, 0,20);
+    for(auto cur:blist){
+        cout<<cur.first<<" "<<cur.second<<endl;
+    }
+    return 0;
+}
+
