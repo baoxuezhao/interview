@@ -1,0 +1,65 @@
+//assume the length of every edge is 1
+struct Node{
+	int id;
+	vector<Node*> nbs;
+	Node(int i){
+		id=i;
+	}
+}
+
+int getChildCount(Node* root,Node* parent,unordered_map<int,int>& count_map){
+	if(root->nbs.size()==0){
+		return 1;
+	}
+	int count=1;
+	if(parent==NULL){
+		for(int i=0;i<root->nbs.size();i++){
+			count+=getChildCount(root->nbs[i]);	
+		}
+	}else{
+		for(int i=0;i<root->nbs.size();i++){
+			if(root->nbs[i]!=parent){
+				count+=getChilCount(root->nbs[i]);
+			}
+		}
+	}
+	count_map[root->id]=count;
+	return count;
+		
+}
+
+Node* center(Node* root,Node* parent,unordered_map<int,int>& count_map){
+	for(int i=0;i<root->nbs.size();i++){
+		if(parent!=NULL && parent==root->nbs[i])
+			continue;
+		if(root->nbs[i]->nbs.size()>=(count+1)/2)
+			return center(root->nbs[i],root);
+	}		
+	return root;
+
+
+}
+Node* center(Node* root){
+	unordered_map<int,int> count_map;
+	int count=getChildCount(root,count_map);
+	return center(root,NULL,count_map);
+}
+
+int main(){
+	int n=8;
+	vector<Node*> data;
+	for(int i=0;i<n;i++){
+		Node* n=new Node(i+1);
+		data.push_back(n);
+	}
+	data[0]->nbs.push_back(data[1]);
+	data[0]->nbs.push_back(data[2]);
+	data[0]->nbs.push_back(data[3]);
+	data[2]->nbs.push_back(data[4]);
+	data[2]->nbs.push_back(data[5]);
+	data[2]->nbs.push_back(data[6]);
+	data[5]->nbs.push_back(data[7]);
+	cout<<"id: "<<center(data[0])<<endl;
+
+}
+	
