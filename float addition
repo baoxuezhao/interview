@@ -1,39 +1,132 @@
-
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
 
 struct Float{
 	bool neg;
 	int head;
-	vector<int> tail;
+	vector<int> tail; //we store tail in every 9 digits
+	Float(int h,vector<int> t,bool n){
+		head=h;
+		tail=t;
+		neg=n;
+	}
+	Float(){
+		;
+	}
+};
+
+bool absGreat(Float f1,Float f2){
+    if(f1.head>f2.head)
+        return true;
+    else if(f1.head<f2.head)
+        return false;
+    else{
+        for(int i=0;i<min(f1.tail.size(),f2.tail.size());i++)
+            if(f1.tail[i]>f2.tail[i])
+                return true;
+            else if(f1.tail[i]<f2.tail[i])
+                return false;
+        return f1.tail.size()>f2.tail.size();
+    }
 }
 
-Float addSameSign(Float f1,float f2){
+Float addSameSign(Float f1,Float f2,bool neg){
 	vector<int> tail;
 	int n=f1.tail.size();
 	int m=f2.tail.size();
-	int size=max(n.m);
-	for(int i=size-1;i>-1;i++){
+	int size=max(n,m);
+	int carry=0;
+	for(int i=size-1;i>-1;i--){
 		if(i>=n)
 			tail.push_back(f2.tail[i]);
 		else if(i>=m)
-			tail.push_back
-
+			tail.push_back(f1.tail[i]);
+		else{
+			int val=f1.tail[i]+f2.tail[i]+carry;
+			carry=val/10;
+			tail.push_back(val%10);
+		}
 	}
-
+	reverse(tail.begin(),tail.end());
+	int head=f1.head+f2.head+carry;
+	return Float(head,tail,neg);
 }
-
+//f1 - f2 assume |f1|>=|f2|
+Float minus1(Float f1,Float f2,bool neg){
+    
+	Float ret;
+	int n=f1.tail.size();
+	int m=f2.tail.size();
+	vector<int> tail;
+	int carry=0;
+	for(int i=max(n,m)-1;i>-1;i--){
+		if(i>=m){
+			tail.push_back(f1.tail[i]);
+		}else if(i>=n){
+			int val=10-carry-f2.tail[i];
+			tail.push_back(val);
+			carry=1;
+		}else{
+			int val=f1.tail[i]-f2.tail[i]-carry;
+			if(val<0){
+				carry=1;
+				val+=10;
+			}else
+				carry=0;
+			tail.push_back(val);
+		}
+	}//for
+	reverse(tail.begin(),tail.end());
+	int head=f1.head-f2.head-carry;
+	ret.head=head;
+	ret.tail=tail;
+    ret.neg=neg;
+    return ret;
+}
 Float add(Float f1,Float f2){
 	bool neg;
+    Float f;
 	if(f1.neg && f2.neg){
 		neg=true;
+		return addSameSign(f1,f2,true);
 	}
 	else if(!f1.neg && !f2.neg){
 		neg=false;
+		return addSameSign(f1,f2,false);
 	}
 	else if(!f1.neg && f2.neg){//f1-f2
-		
+        if(absGreat(f1, f2))
+            return minus1(f1,f2,false);
+        else
+            return minus1(f2,f1,true);
 	}else{ //f2-f1
-		
-
+		if(absGreat(f2, f1))
+            return minus1(f2,f1,false);
+        else
+            return minus1(f1,f2,true);
 	}
+}
 
+void print(Float f){
+	if(f.neg)
+		cout<<"-";
+	cout<<f.head;
+	if(f.tail.size())
+		cout<<".";
+	for(int i=0;i<f.tail.size();i++)
+		cout<<f.tail[i];
+}
+int main(){
+	int a[]={2,3,4,0,1};
+	int b[]={0,0,1,2};
+	vector<int> ta(a,a+(sizeof(a)/sizeof(int)));
+	vector<int> tb(b,b+sizeof(b)/sizeof(int));
+	int ha=123;
+	int hb=34;
+	Float fa(ha,ta,true);
+	Float fb(hb,tb,false);
+	Float ret=add(fa,fb);
+	print(ret);
 }
