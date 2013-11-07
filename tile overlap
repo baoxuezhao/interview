@@ -1,9 +1,55 @@
 
 
-int overlap(int rw,int cl,int count,bool** visited,int m,int n){
-  if(
+void overlap(int rw,int cl,int count,int& ret,bool** visited,int m,int n){
+  
+	if(
 
 
 
+
+count==(m*n/2))
+		ret++;
+	if(cl==n){
+		rw++;
+		cl=0;
+	}
+	for(int i=rw;i<m;i++){
+		if(i>rw)
+			cl=0;
+		for(int j=cl;j<n;j++)
+			if(!visited[rw][cl])
+				break;
+	}
+	visited[rw][cl]=true;
+	if(cl<n-1 && !visited[rw][cl+1]){
+		visited[rw][cl+1]=true;
+		overlap(rw,cl+1,count+1,ret,visited,m,n);
+		visited[rw][cl+1]=false;
+	}
+	if(rw<m-1 && !visited[rw+1][cl]){
+		visited[rw+1][cl]=true;
+		overlap(rw,cl+1,count+1,ret,visited,m,n);
+		visited[rw+1][cl]=false;
+	}
+	visited[rw][cl]=false;
+}
+void init(bool** arr,int m,int n,bool val){
+	for(int i=0;i<m;i++)
+		for(int j=0;j<n;j++)
+			arr[i][j]=val;
+		
+}
+
+int main(){
+	int m=20;
+	int n=10;
+	bool** visited=new bool*[m];
+	for(int i=0;i<m;i++)
+		visited[i]=new bool[n];
+	init(visited,m,n,false);
+	int ret=0;
+	overlap(0,0,0,ret,visited,m,n);
+	cout<<"ret: "<<ret<<endl;
+	
 
 }
