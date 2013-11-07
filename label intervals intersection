@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+ #include <vector>
+ #include <algorithm>
  
  using namespace std;
 
 struct Interval{
-	int head,tail;
+    int head,tail;
 	int label;
 	Interval(int h,int t,int l){
 		head=h;
@@ -22,14 +24,14 @@ struct Interval{
 struct Point{
 	int pos;
 	int tag; //tag>0 start point <0 end point
-	point(int p,int t){
+	Point(int p,int t){
 		pos=p;
 		tag=t;
 	}
-}
+};
 
 bool cmp(const Point& a,const Point& b){
-	return a.pos<b.pos || (a.pos==b.pos && a.tag>b.tag) );
+	return a.pos<b.pos || (a.pos==b.pos && a.tag>b.tag);
 }
 
 vector<Interval> intersect(vector<vector<Interval> > intervals){
@@ -41,33 +43,39 @@ vector<Interval> intersect(vector<vector<Interval> > intervals){
 			points.push_back(Point(intervals[i][j].tail,-i-1));
 		}
 	}
-	sort(points.begin(),points.end,cmp);
+	sort(points.begin(),points.end(),cmp);
 	int count[intervals.size()+1];
-	int pre=points[0].pos;
-	int prec=1;
+    for(int i=0;i<intervals.size()+1;i++)
+        count[i]=0;
+	int pre=0;
+	int prec=0;
 	int size=intervals.size();
-	for(int i=1;i<points.size();i++){
+
+	for(int i=0;i<points.size();i++){
 		if(points[i].tag>0){
 			if(count[points[i].tag]==0){
 				prec++;	
+                pre=points[i].pos;
 			}
 			count[points[i].tag]++;
-			pre=points[i].pos;
 		}else{
-			if(prec==size){
-				ret.push_back(Interval(pre,points[i].pos));
+			count[abs(points[i].tag)]--;
+			if(count[abs(points[i].tag)]==0){
+			    if(prec==size){
+				    ret.push_back(Interval(pre,points[i].pos));
+			    }
 				prec--;
 			}
-			count[points[i].tag]--;
-			if(count[points[i].tag==0)
-				prec--;
 		}
+      //  cout<<"prec: "<<prec<<endl;
+       
 	}
+    return ret;
 }
 
 void print(vector<Interval> p){
 	for(int i=0;i<p.size();i++)
-		cout<<p.head<<" "<<p.tail<<endl;
+		cout<<p[i].head<<" "<<p[i].tail<<endl;
 }
 
 int main(){
@@ -75,13 +83,13 @@ int main(){
 	Interval i2(3,5);
 	Interval i3(4,8);
 	vector<Interval> ia;
-	vector<Interval> ia.push_back(i1);
-	vector<Interval> ia.push_back(i2);
-	vector<Interval> ia.push_back(i3);
-		vector<Interval> ib;
-	vector<Interval> ib.push_back(i1);
-	vector<Interval> ib.push_back(i2);
-	vector<Interval> ib.push_back(i3);
+	ia.push_back(i1);
+	 ia.push_back(i2);
+	 ia.push_back(i3);
+	vector<Interval> ib;
+    ib.push_back(i1);
+    ib.push_back(i2);
+     ib.push_back(i3);
 	vector<vector<Interval> > data;
 	data.push_back(ia);
 	data.push_back(ib);
