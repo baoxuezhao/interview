@@ -1,36 +1,66 @@
+
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
 class Matrix{
-  vector<vector<int> > data;
-  vector<vector<int> > tree;
-  matrix(vector<vector> >d){
-    data=d;
-    tree.resize(data.size()+1);
-    for(int i=0;i<tree.size();i++)
-      tree[i].resize(data[0].size()+1);
-    tree[0][0]=0;
-  }
-  //means that add val at position x y, here the index are based at 1, so every time you   
-       
-  void update(int x,int y,int val){
-      data[x][y]=val;
-      for(int i=x;i<=tree.size();i+=( i&-i) ){
-          for(int j=y;j<=tree[0].size();j+=( j&-j) ){
-              tree[i][j]+=val;
-          }
-      }
-  }
-  
-  //x y is based from 1 
-  int sum(int x,int y){
+    vector<vector<int> > data;
+    vector<vector<int> > tree;
+public:
+    Matrix(vector<vector<int> > d){
+        data=d;
+        tree.resize(data.size()+1);
+        for(int i=0;i<tree.size();i++)
+            tree[i].resize(data[0].size()+1);
+        tree[0][0]=0;
+        
+    }
+    //means that add val at position x y, here the index are based at 1, so every time you
+    
+    void update(int x,int y,int val){
+        data[x][y]=val;
+        for(int i=x;i<=tree.size();i+=( i&-i) ){
+            for(int j=y;j<=tree[0].size();j+=( j&-j) ){
+                tree[i][j]+=val;
+            }
+        }
+    }
+    
+    //x y is based from 1
+    int sum(int x,int y){
         int ret=0;
         for(int i=x;i>0; i-= (i&-i) ){
-          for(int j=y;j>0;j-= (j&-j) ){
-              ret+=tree[i][j];
-          }
+            for(int j=y;j>0;j-= (j&-j) ){
+                ret+=tree[i][j];
+            }
         }
         return ret;
-  }
-  
-  int sumrange(int x1,int y1,int x2,int y2){
-      return sum(x2,y2)-sum(x2,y1-1)-sum(x1-1,y2)+sum(x1-1,y1-1);
-  }
+    }
+    
+    int sumrange(int x1,int y1,int x2,int y2){
+        return sum(x2,y2)-sum(x2,y1-1)-sum(x1-1,y2)+sum(x1-1,y1-1);
+    }
+};
+
+int main(){
+    int a[]={1,2};
+    int b[]={3,4};
+    vector<int> va(a,a+2);
+    vector<int> vb(b,b+2);
+    vector<vector<int> >data;
+    data.push_back(va);
+    data.push_back(vb);
+    
+    Matrix matrix(data);
+    cout<<matrix.sumrange(1, 1, 2, 2)<<endl;
+    return 0;
+    
+    
 }
+
+
+
