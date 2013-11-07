@@ -1,0 +1,48 @@
+struct Interval {
+	int head, tail;
+	Interval(){};
+	Interval(int _head, int _tail):head(_head), tail(_tail);
+};
+
+struct Point {
+	int val;
+	int tag;
+	Point(){}
+	Point(){int _val, int _tag):val(_val), tag(_tag){};
+	bool operator < (const Point &rhs) const {
+		return val < rhs.val || val == rhs.val && tag > rhs.tag);
+	}
+};
+
+vector<Interval> FindOverlapIntervals(const vector<vector<Interval> > labels) {
+	vector<Interval> ans;
+	vector<Point> points;
+	for (int i = 0; i < labels.size(); i++)
+		for (auto &interval : labels[i]) {
+			points.push_back(Point(interval.head, i + 1);
+			points.push_back(Point(interval.tail, -i - 1);
+		}
+	sort(points.begin(), points.end());
+	int n = labels.size();
+	vector<int> count(n + 1);
+	int pre = 0;
+	int cover = 0;
+	for (auto &point : points) {
+		if (point.tag > 0) {
+			if (count[point.tag] == 0) {
+				cover++;
+				pre = point.val;
+			}
+			count[point.tag]++;		
+		} else {
+			point.tag = -point.tag;
+			count[point.tag]--;
+			if (count[point.tag] == 0) {
+				if (conver == n)
+					ans.push_back(Interval(pre, point.val));
+				cover--;
+			}
+		}
+	}
+	return ans;
+}
