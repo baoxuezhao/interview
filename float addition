@@ -1,0 +1,39 @@
+
+
+struct Float{
+	bool neg;
+	int head;
+	vector<int> tail;
+}
+
+Float addSameSign(Float f1,float f2){
+	vector<int> tail;
+	int n=f1.tail.size();
+	int m=f2.tail.size();
+	int size=max(n.m);
+	for(int i=size-1;i>-1;i++){
+		if(i>=n)
+			tail.push_back(f2.tail[i]);
+		else if(i>=m)
+			tail.push_back
+
+	}
+
+}
+
+Float add(Float f1,Float f2){
+	bool neg;
+	if(f1.neg && f2.neg){
+		neg=true;
+	}
+	else if(!f1.neg && !f2.neg){
+		neg=false;
+	}
+	else if(!f1.neg && f2.neg){//f1-f2
+		
+	}else{ //f2-f1
+		
+
+	}
+
+}
