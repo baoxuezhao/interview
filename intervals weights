@@ -45,21 +45,33 @@ void discrete(vector<Interval> intervals,vector<int> & ranges,vector<int> &weigh
 			prev.weight=max(prev.weight,cur.weight);
 			continue;
 		}
-		ranges.push_back(cur.pos);
+		
 		if(prev.weight>0&&cur.weight>0){
-			weights.push_back(prev.weight);
-			prev.pos=cur.pos;
-			prev.weight=max(prev.weight,cur.weight);
+            if(prev.weight>=cur.weight)
+                continue;
+            else{
+                ranges.push_back(cur.pos);
+                weights.push_back(prev.weight);
+                prev=cur;
+            }
 		}
 		else if(prev.weight>0&&cur.weight<0){
-			weights.push_back(max(prev.weight,abs(cur.weight)));
-			prev.pos=cur.pos;
+            if(abs(cur.weight)<=prev.weight && i!=vec.size()-1){
+                continue;
+            }else{
+                ranges.push_back(cur.pos);
+                weights.push_back(abs(cur.weight));
+                prev.pos=cur.pos;
+            }
 		}else if(prev.weight<0&&cur.weight>0){
+            ranges.push_back(cur.pos);
 			weights.push_back(0);
 			prev=cur;
 		}else{
-			weights.push_back(cur.weight);
-			prev=cur;
+                ranges.push_back(cur.pos);
+                weights.push_back(abs(cur.weight));
+                prev=cur;
+            
 		}
 	}
 }
