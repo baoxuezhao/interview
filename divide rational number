@@ -20,20 +20,21 @@ string divide(int a,int b){
 	if(a==0)
 		return result;
 	result+='.';
-	a=a*10;
+	//a=a*10;
 	int loop_s=-1;
+    //a is the remaning part
 	while(a!=0){
 		if(remain.find(a)!=remain.end()){
 			loop_s=remain.find(a)->second;
 			break;
 		}
 		remain.insert(pair<int,int>(a,result.size()));
+        a=a*10;
 		if(a<b){
-			a=a*10;
 			result+='0';
 		}else{
 			result+=(a/b+'0');
-			a=a%b*10;
+			a=a%b;
 		}
 	}
 	if(a!=0){
@@ -46,10 +47,10 @@ string divide(int a,int b){
 
 int main()
 {
-    int n=100;
+    int n=1;
     while(n){
-        int a=rand()%1000;
-        int b=rand()%300+1;
+        int a=1;
+        int b=3;
         cout<<"a: "<<a<<" b: "<<b<<" "<<divide(a,b)<<endl;
         n--;
     }
