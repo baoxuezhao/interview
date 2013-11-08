@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+
+int findGreat(vector<int> d,int N,int count){
+	for(int i=0;i<N;i++)
+		if(2*d[i]>=count)
+			return i;
+	return -1;
+}
+int getNbr(vector<vector<int> >& M,int idx,int N){
+	int i=0;
+	for(;i<N;i++)
+		if(M[idx][i]==1){
+			M[i][idx]=0;
+			return i;
+		}
+    return -1;
+}
+int center(int u[],int v[],int N){
+	//build adjacent matrix, assume the nodes are from 0 to N-1
+	vector<vector<int> > M(N,vector<int>(N,0));
+    vector<int> d(N,0);
+	for(int i=0;i<N-1;i++){
+		int n1=u[i];
+		int n2=v[i];
+		M[n1][n2]=1;
+		M[n2][n1]=1;
+		d[u[i]]++;
+		d[v[i]]++;
+	}
+	int count=N;
+    //count degree of each node
+    while(true){
+        int ret=findGreat(d,N,count);
+        //cout<<"ret: "<<ret<<endl;
+        if(ret>=0)
+            return ret;
+        for(int i=0;i<N;i++){
+            if(d[i]==1)
+                d[i]=0;
+        }
+        for(int i=0;i<N;i++){
+            if(d[i]==0){
+                int nbr=getNbr(M,i,N); //get its neighbor and update the matrix
+                d[nbr]--;
+                count--;
+                d[i]=-1; //we delete this node from the tree
+            }
+        }
+    }
+}
+
+int main(){
+    int u[]={0,6,0,1,3,3};
+    int v[]={4,0,3,2,2,5};
+    int N=sizeof(u)/sizeof(int)+1;
+    cout<<"id of center node is: "<<center(u,v,N)<<endl;
+    
+}
