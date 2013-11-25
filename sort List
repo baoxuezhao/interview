@@ -1,0 +1,62 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+ int getLength(ListNode* head){
+     int length=0;
+     while(head){
+         length++;
+         head=head->next;
+     }
+     return length;
+ }
+class Solution {
+public:
+    ListNode* merge(ListNode* head1,ListNode* head2){
+        ListNode dummy(-1);
+        ListNode* head=&dummy;
+        while(head1 || head2){
+            if(head1 && head2){
+                if(head1->val<head2->val){
+                    head->next=head1;
+                    head1=head1->next;
+                }else{
+                    head->next=head2;
+                    head2=head2->next;
+                }
+                head=head->next;
+            }else if(!head1){
+                head->next=head2;
+                break;
+            }else{
+                head->next=head1;
+                break;
+            }
+        }
+        return dummy.next;
+    }
+    ListNode* sortList(ListNode*& head,int length){
+        if(length==1){
+            ListNode* ret=head;
+            head=head->next;
+            ret->next=NULL;
+            return ret;
+        }
+        int mid=length/2;
+        ListNode* head1=sortList(head,mid);
+        ListNode* head2=sortList(head,length-mid);
+        return merge(head1,head2);
+    }
+    ListNode *sortList(ListNode *head) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        int length=getLength(head);
+        if(length<2)
+            return head;
+        return sortList(head,length);
+    }
+};
